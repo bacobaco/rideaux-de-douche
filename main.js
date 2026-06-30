@@ -98,6 +98,12 @@ const visitorCounter = document.getElementById("visitor-counter-val");
 
 // Initialize player
 function initPlayer() {
+    // Explicitly make sure the Live Scout tab is marked active on load
+    const defaultTab = document.getElementById("tab-live-scout");
+    if (defaultTab) {
+        tabButtons.forEach(btn => btn.classList.remove("active"));
+        defaultTab.classList.add("active");
+    }
     loadTrack(currentPlaylistKey, 0, false);
     renderTracklist();
     setupVolume();
@@ -254,7 +260,7 @@ function renderTracklist() {
         tr.setAttribute("data-index", index);
         
         // Add active style if it's the currently loaded track
-        if (currentPlaylistKey === currentPlaylistKey && index === currentTrackIndex) {
+        if (index === currentTrackIndex) {
             tr.className = "active-track";
         }
 
@@ -389,26 +395,33 @@ window.addEventListener("scroll", () => {
    4. Mock Visitor Counter & Page Load initialization
    ========================================================================== */
 
-// Page Views Counter simulation (dynamic ticking to keep it lively)
-function runVisitorCounter() {
-    // Generate a reasonable starting counter
-    let baseCount = 28430;
-    
-    // If we have saved it in session, retrieve it
-    if (sessionStorage.getItem("rdd_visitors")) {
-        baseCount = parseInt(sessionStorage.getItem("rdd_visitors"));
+// Real Page Views Counter using free public CounterAPI
+async function runVisitorCounter() {
+    const historicalBase = 28430;
+    try {
+        const response = await fetch("https://api.counterapi.dev/v1/rdd_visitors/page_hits/up");
+        if (response.ok) {
+            const data = await response.json();
+            const realCount = historicalBase + (data.count || 1);
+            visitorCounter.textContent = realCount;
+            return;
+        }
+    } catch (err) {
+        console.warn("Failed to fetch real visitor count, falling back to simulation:", err);
     }
     
-    // Dynamic ticking simulating traffic
-    visitorCounter.textContent = baseCount;
-    sessionStorage.setItem("rdd_visitors", baseCount);
-
+    // Fallback simulation if the API is down
+    let fallbackCount = historicalBase + 450;
+    if (sessionStorage.getItem("rdd_visitors")) {
+        fallbackCount = parseInt(sessionStorage.getItem("rdd_visitors"));
+    }
+    visitorCounter.textContent = fallbackCount;
+    
     setInterval(() => {
-        // Increment visitor count randomly
         if (Math.random() > 0.4) {
-            baseCount += Math.floor(Math.random() * 3) + 1;
-            visitorCounter.textContent = baseCount;
-            sessionStorage.setItem("rdd_visitors", baseCount);
+            fallbackCount += Math.floor(Math.random() * 3) + 1;
+            visitorCounter.textContent = fallbackCount;
+            sessionStorage.setItem("rdd_visitors", fallbackCount);
         }
     }, 4500);
 }
