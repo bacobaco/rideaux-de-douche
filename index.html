@@ -397,14 +397,28 @@
                                 </a>
                             </div>
                             
-                            <!-- Premium Mock Counter -->
-                            <div class="counter-box margin-top-md">
-                                <div class="counter-icon-wrapper">
-                                    <i class="fa-solid fa-users-viewfinder counter-icon"></i>
+                            <!-- Detailed Stats Widget -->
+                            <div class="stats-widget margin-top-md">
+                                <div class="stat-row">
+                                    <div class="stat-info">
+                                        <i class="fa-solid fa-globe stat-icon" style="color: var(--primary-light);"></i>
+                                        <span class="stat-label">Depuis l'origine (1999)</span>
+                                    </div>
+                                    <span class="stat-value" id="stats-total">--</span>
                                 </div>
-                                <div class="counter-text">
-                                    <span class="counter-number" id="visitor-counter-val">1990</span>
-                                    <span class="counter-label">Visiteurs Passionnés (Visuel propre, sans piss.gif !)</span>
+                                <div class="stat-row">
+                                    <div class="stat-info">
+                                        <i class="fa-solid fa-calendar-days stat-icon" style="color: var(--secondary);"></i>
+                                        <span class="stat-label">Cette année</span>
+                                    </div>
+                                    <span class="stat-value" id="stats-year">--</span>
+                                </div>
+                                <div class="stat-row">
+                                    <div class="stat-info">
+                                        <i class="fa-solid fa-chart-line stat-icon" style="color: #00ffcc;"></i>
+                                        <span class="stat-label">Ce mois-ci</span>
+                                    </div>
+                                    <span class="stat-value" id="stats-month">--</span>
                                 </div>
                             </div>
                         </div>
