@@ -461,11 +461,10 @@ function setupDamienSound() {
 }
 
 /* ==========================================================================
-   5. Livre d'Or (Guestbook) Logic using KVdb.io API
+   5. Livre d'Or (Guestbook) Logic using Google Sheets API
    ========================================================================== */
 
-const GUESTBOOK_BUCKET_ID = "RkGdagiLED5EutGhCxP4Wa";
-const GUESTBOOK_API_URL = `https://kvdb.io/${GUESTBOOK_BUCKET_ID}/guestbook`;
+const GUESTBOOK_API_URL = "https://script.google.com/macros/s/AKfycbwZGqAvPDqnANKaGimUbRYZYWuPba-saOIAAwSjcwKovakpVzRTApwsZUZgxkJVpeC5mQ/exec";
 let guestbookMessages = [];
 
 async function setupGuestbook() {
@@ -486,27 +485,6 @@ async function setupGuestbook() {
                 const data = await response.json();
                 guestbookMessages = data.messages || [];
                 renderMessages();
-            } else if (response.status === 404 || response.status === 403) {
-                // Key not found or bucket needs verification activation
-                // Seed with initial default messages
-                guestbookMessages = [
-                    {
-                        "name": "Dada Fan",
-                        "text": "Les RDD c'est toute ma jeunesse ! J'ai encore la cassette d'époque de Live Scout (1990) dans mon tiroir. Quel kiff de retrouver les morceaux en ligne !",
-                        "date": "04/05/2026"
-                    },
-                    {
-                        "name": "Rockeur d'Angers",
-                        "text": "Super la modernisation du site ! Très propre et pro. Simone et les garçons ont bien pris la relève spirituelle, le morceau 'Centre du jeu' déchire.",
-                        "date": "12/06/2026"
-                    },
-                    {
-                        "name": "Mélomane Grunge",
-                        "text": "Quel plaisir de réécouter 'Under my thumb' et 'Cocaine' en live brut. RDD forever !",
-                        "date": "28/06/2026"
-                    }
-                ];
-                renderMessages();
             } else {
                 container.innerHTML = `<div class="text-center text-muted" style="padding: 20px;">Erreur de chargement des messages.</div>`;
             }
@@ -518,21 +496,45 @@ async function setupGuestbook() {
 
     // 2. Render messages in DOM
     function renderMessages() {
-        if (guestbookMessages.length === 0) {
-            container.innerHTML = `<div class="text-center text-muted" style="padding: 20px;">Aucun message pour le moment. Soyez le premier !</div>`;
-            return;
-        }
+        const seedMessages = [
+            {
+                "name": "Dada Fan",
+                "text": "Les RDD c'est toute ma jeunesse ! J'ai encore la cassette d'époque de Live Scout (1990) dans mon tiroir. Quel kiff de retrouver les morceaux en ligne !",
+                "date": "04/05/2026"
+            },
+            {
+                "name": "Rockeur d'Angers",
+                "text": "Super la modernisation du site ! Très propre et pro. Simone et les garçons ont bien pris la relève spirituelle, le morceau 'Centre du jeu' déchire.",
+                "date": "12/06/2026"
+            },
+            {
+                "name": "Mélomane Grunge",
+                "text": "Quel plaisir de réécouter 'Under my thumb' et 'Cocaine' en live brut. RDD forever !",
+                "date": "28/06/2026"
+            }
+        ];
+        
+        // Merge seeds with sheet messages
+        const allMessages = [...seedMessages, ...guestbookMessages];
         
         container.innerHTML = "";
-        // Render newest messages first
-        [...guestbookMessages].reverse().forEach(msg => {
+        // Render newest messages first (so new submissions are at the top)
+        [...allMessages].reverse().forEach(msg => {
             const entry = document.createElement("div");
             entry.className = "guestbook-entry";
             
             // Basic sanitization
             const cleanName = msg.name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
             const cleanText = msg.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            const cleanDate = msg.date.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            
+            // Format date if it's an ISO timestamp from Google Sheets
+            let cleanDate = msg.date.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            if (cleanDate.includes("T")) {
+                const d = new Date(cleanDate);
+                if (!isNaN(d.getTime())) {
+                    cleanDate = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+                }
+            }
 
             entry.innerHTML = `
                 <div class="guestbook-entry-header">
@@ -563,22 +565,21 @@ async function setupGuestbook() {
             const now = new Date();
             const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
 
-            // Add the new message locally
             const newMsg = { name, text, date: dateStr };
-            const updatedMessages = [...guestbookMessages, newMsg];
 
             try {
-                // Send updated list to KVdb.io
+                // Send new message to Google Apps Script Web App
+                // Using text/plain Content-Type to prevent CORS preflight OPTIONS requests
                 const response = await fetch(GUESTBOOK_API_URL, {
-                    method: 'PUT',
+                    method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'text/plain'
                     },
-                    body: JSON.stringify({ messages: updatedMessages })
+                    body: JSON.stringify(newMsg)
                 });
 
                 if (response.ok) {
-                    guestbookMessages = updatedMessages;
+                    guestbookMessages.push(newMsg);
                     renderMessages();
                     
                     // Reset form & show success feedback
@@ -588,7 +589,7 @@ async function setupGuestbook() {
                     feedback.textContent = "Message publié avec succès ! Merci de votre soutien.";
                     feedback.style.display = "block";
                 } else {
-                    throw new Error("API returned error status");
+                    throw new Error("Google Script returned error status");
                 }
             } catch (err) {
                 console.error("Failed to post message:", err);
