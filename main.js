@@ -480,7 +480,7 @@ async function setupGuestbook() {
     // 1. Load existing messages
     async function loadMessages() {
         try {
-            const response = await fetch(`https://extendsclass.com/api/json-storage/bin/${GUESTBOOK_BIN_ID}`);
+            const response = await fetch(`https://json.extendsclass.com/bin/${GUESTBOOK_BIN_ID}`);
             if (response.ok) {
                 const data = await response.json();
                 guestbookMessages = data.messages || [];
@@ -547,7 +547,7 @@ async function setupGuestbook() {
 
             try {
                 // Send updated list to ExtendsClass
-                const response = await fetch(`https://extendsclass.com/api/json-storage/bin/${GUESTBOOK_BIN_ID}`, {
+                const response = await fetch(`https://json.extendsclass.com/bin/${GUESTBOOK_BIN_ID}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
