@@ -461,10 +461,11 @@ function setupDamienSound() {
 }
 
 /* ==========================================================================
-   5. Livre d'Or (Guestbook) Logic using ExtendsClass API
+   5. Livre d'Or (Guestbook) Logic using JSONBlob.com API
    ========================================================================== */
 
-const GUESTBOOK_BIN_ID = "cacafac";
+const GUESTBOOK_BLOB_ID = "019f1cbe-f9da-73cc-b0b8-506d42a2ac39";
+const GUESTBOOK_API_URL = `https://jsonblob.com/api/jsonBlob/${GUESTBOOK_BLOB_ID}`;
 let guestbookMessages = [];
 
 async function setupGuestbook() {
@@ -480,7 +481,9 @@ async function setupGuestbook() {
     // 1. Load existing messages
     async function loadMessages() {
         try {
-            const response = await fetch(`https://json.extendsclass.com/bin/${GUESTBOOK_BIN_ID}`);
+            const response = await fetch(GUESTBOOK_API_URL, {
+                headers: { 'Accept': 'application/json' }
+            });
             if (response.ok) {
                 const data = await response.json();
                 guestbookMessages = data.messages || [];
@@ -546,11 +549,12 @@ async function setupGuestbook() {
             const updatedMessages = [...guestbookMessages, newMsg];
 
             try {
-                // Send updated list to ExtendsClass
-                const response = await fetch(`https://json.extendsclass.com/bin/${GUESTBOOK_BIN_ID}`, {
+                // Send updated list to JSONBlob
+                const response = await fetch(GUESTBOOK_API_URL, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({ messages: updatedMessages })
                 });
