@@ -440,6 +440,7 @@ window.addEventListener("DOMContentLoaded", () => {
     initPlayer();
     runVisitorCounter();
     setupDamienSound();
+    setupGuestbook();
 });
 
 // Damien Sound Trigger Logic
@@ -458,3 +459,130 @@ function setupDamienSound() {
     if (textLink1) textLink1.addEventListener("click", playSound);
     if (textLink2) textLink2.addEventListener("click", playSound);
 }
+
+/* ==========================================================================
+   5. Livre d'Or (Guestbook) Logic using ExtendsClass API
+   ========================================================================== */
+
+const GUESTBOOK_BIN_ID = "bfdfdeb";
+const GUESTBOOK_SEC_KEY = "rdd_guestbook_sec_key_2026";
+let guestbookMessages = [];
+
+async function setupGuestbook() {
+    const form = document.getElementById("guestbook-form-element");
+    const nameInput = document.getElementById("form-name");
+    const messageInput = document.getElementById("form-message");
+    const submitBtn = document.getElementById("form-submit-btn");
+    const feedback = document.getElementById("form-feedback");
+    const container = document.getElementById("guestbook-board-container");
+
+    if (!container) return;
+
+    // 1. Load existing messages
+    async function loadMessages() {
+        try {
+            const response = await fetch(`https://extendsclass.com/api/json-storage/bin/${GUESTBOOK_BIN_ID}`);
+            if (response.ok) {
+                const data = await response.json();
+                guestbookMessages = data.messages || [];
+                renderMessages();
+            } else {
+                container.innerHTML = `<div class="text-center text-muted" style="padding: 20px;">Erreur de chargement des messages.</div>`;
+            }
+        } catch (err) {
+            console.error("Failed to load guestbook messages:", err);
+            container.innerHTML = `<div class="text-center text-muted" style="padding: 20px;">Impossible de se connecter au Livre d'Or.</div>`;
+        }
+    }
+
+    // 2. Render messages in DOM
+    function renderMessages() {
+        if (guestbookMessages.length === 0) {
+            container.innerHTML = `<div class="text-center text-muted" style="padding: 20px;">Aucun message pour le moment. Soyez le premier !</div>`;
+            return;
+        }
+        
+        container.innerHTML = "";
+        // Render newest messages first
+        [...guestbookMessages].reverse().forEach(msg => {
+            const entry = document.createElement("div");
+            entry.className = "guestbook-entry";
+            
+            // Basic sanitization
+            const cleanName = msg.name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const cleanText = msg.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const cleanDate = msg.date.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            entry.innerHTML = `
+                <div class="guestbook-entry-header">
+                    <span class="guestbook-author">${cleanName}</span>
+                    <span class="guestbook-date">${cleanDate}</span>
+                </div>
+                <div class="guestbook-text">${cleanText}</div>
+            `;
+            container.appendChild(entry);
+        });
+    }
+
+    // 3. Handle message submit
+    if (form) {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const name = nameInput.value.trim();
+            const text = messageInput.value.trim();
+            if (!name || !text) return;
+
+            // Disable button and show sending state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Publication...`;
+            feedback.style.display = "none";
+
+            // Format date as DD/MM/YYYY
+            const now = new Date();
+            const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+
+            // Add the new message locally
+            const newMsg = { name, text, date: dateStr };
+            const updatedMessages = [...guestbookMessages, newMsg];
+
+            try {
+                // Send updated list to ExtendsClass
+                const response = await fetch(`https://extendsclass.com/api/json-storage/bin/${GUESTBOOK_BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Security-key': GUESTBOOK_SEC_KEY
+                    },
+                    body: JSON.stringify({ messages: updatedMessages })
+                });
+
+                if (response.ok) {
+                    guestbookMessages = updatedMessages;
+                    renderMessages();
+                    
+                    // Reset form & show success feedback
+                    nameInput.value = "";
+                    messageInput.value = "";
+                    feedback.style.color = "#00ffcc";
+                    feedback.textContent = "Message publié avec succès ! Merci de votre soutien.";
+                    feedback.style.display = "block";
+                } else {
+                    throw new Error("API returned error status");
+                }
+            } catch (err) {
+                console.error("Failed to post message:", err);
+                feedback.style.color = "var(--secondary)";
+                feedback.textContent = "Erreur lors de la publication. Veuillez réessayer.";
+                feedback.style.display = "block";
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-pen-fancy"></i> Publier sur le Livre d'Or`;
+            }
+        });
+    }
+
+    // Initial load
+    await loadMessages();
+}
+

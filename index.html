@@ -358,47 +358,43 @@
             <div class="container">
                 <div class="section-header text-center">
                     <h2 class="section-title">Rejoindre la Tribu</h2>
-                    <p class="section-subtitle">Laissez un message d'encouragement aux RDD ou consultez les statistiques de visite.</p>
+                    <p class="section-subtitle">Laissez un message d'encouragement aux RDD sur le livre d'or officiel.</p>
                 </div>
 
-                <!-- Unified Card: Laissez un message & Stats -->
+                <!-- Unified Card: Livre d'Or & Stats -->
                 <div class="card glass-card unified-contact-card">
                     <div class="grid grid-2">
-                        <!-- Left Side: Form -->
+                        <!-- Left Side: Guestbook Form -->
                         <div class="contact-form-side">
-                            <h3>Laissez un message</h3>
-                            <form id="contact-form-element" class="contact-form" action="mailto:rideauxdedouche@free.fr" method="post" enctype="text/plain">
+                            <h3>Signer le Livre d'Or</h3>
+                            <form id="guestbook-form-element" class="contact-form">
                                 <div class="form-group">
                                     <label for="form-name">Votre nom / Pseudo</label>
-                                    <input type="text" id="form-name" name="name" required placeholder="Ex. Ringo d'Angers">
-                                </div>
-                                <div class="form-group">
-                                    <label for="form-email">Votre Email</label>
-                                    <input type="email" id="form-email" name="email" required placeholder="Ex. fan@rdd.com">
+                                    <input type="text" id="form-name" required placeholder="Ex. Ringo d'Angers">
                                 </div>
                                 <div class="form-group">
                                     <label for="form-message">Votre message</label>
-                                    <textarea id="form-message" name="message" rows="5" required placeholder="Les RDD sont éternels..."></textarea>
+                                    <textarea id="form-message" rows="5" required placeholder="Les RDD sont éternels..."></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-block" id="form-submit-btn">
-                                    <i class="fa-solid fa-paper-plane"></i> Envoyer le mail de fan
+                                    <i class="fa-solid fa-pen-fancy"></i> Publier sur le Livre d'Or
                                 </button>
+                                <div id="form-feedback" class="margin-top-sm" style="display: none; font-size: 0.9rem; font-weight: bold; text-align: center;"></div>
                             </form>
                         </div>
 
-                        <!-- Right Side: Stats & Direct Email -->
+                        <!-- Right Side: Guestbook Board & Stats -->
                         <div class="contact-stats-side">
-                            <h3>Stats & Contact</h3>
-                            <p>Envoyez un e-mail à Dada pour lui demander votre CD physique légendaire des RDD. C'est l'occasion unique de posséder ce jalon de l'histoire du rock d'Angers !</p>
+                            <h3>Livre d'Or des Fans</h3>
+                            <p style="font-size: 0.9rem; margin-bottom: 12px;">Découvrez les messages laissés par les fidèles des Rideaux de Douche.</p>
                             
-                            <div class="guestbook-links">
-                                <a href="mailto:rideauxdedouche@free.fr" class="btn btn-outline btn-block" id="direct-email-btn">
-                                    <i class="fa-solid fa-envelope"></i> rideauxdedouche@free.fr
-                                </a>
+                            <!-- Guestbook Board -->
+                            <div class="guestbook-board" id="guestbook-board-container">
+                                <div class="text-center text-muted" style="font-size: 0.9rem; padding: 20px;">Chargement du livre d'or...</div>
                             </div>
                             
                             <!-- Detailed Stats Widget -->
-                            <div class="stats-widget margin-top-md">
+                            <div class="stats-widget">
                                 <div class="stat-row">
                                     <div class="stat-info">
                                         <i class="fa-solid fa-globe stat-icon" style="color: var(--primary-light);"></i>

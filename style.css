@@ -1358,5 +1358,63 @@ tr.active-track .play-track-icon {
     font-size: 1.3rem;
     color: #fff;
 }
+/* Guestbook scrollable board */
+.guestbook-board {
+    max-height: 250px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius-md);
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
+/* Scrollbar styles for the guestbook */
+.guestbook-board::-webkit-scrollbar {
+    width: 6px;
+}
+.guestbook-board::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+.guestbook-board::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+.guestbook-board::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
 
+.guestbook-entry {
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 3px solid var(--primary-light);
+    padding: 10px 14px;
+    border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+}
+
+.guestbook-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.guestbook-author {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.guestbook-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.guestbook-text {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    line-height: 1.4;
+    word-break: break-word;
+}
