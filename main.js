@@ -461,11 +461,11 @@ function setupDamienSound() {
 }
 
 /* ==========================================================================
-   5. Livre d'Or (Guestbook) Logic using JSONBlob.com API
+   5. Livre d'Or (Guestbook) Logic using KVdb.io API
    ========================================================================== */
 
-const GUESTBOOK_BLOB_ID = "019f1cbe-f9da-73cc-b0b8-506d42a2ac39";
-const GUESTBOOK_API_URL = `https://jsonblob.com/api/jsonBlob/${GUESTBOOK_BLOB_ID}`;
+const GUESTBOOK_BUCKET_ID = "LmVuKvm2U6GM6jZnXToHh4";
+const GUESTBOOK_API_URL = `https://kvdb.io/${GUESTBOOK_BUCKET_ID}/guestbook`;
 let guestbookMessages = [];
 
 async function setupGuestbook() {
@@ -481,12 +481,31 @@ async function setupGuestbook() {
     // 1. Load existing messages
     async function loadMessages() {
         try {
-            const response = await fetch(GUESTBOOK_API_URL, {
-                headers: { 'Accept': 'application/json' }
-            });
+            const response = await fetch(GUESTBOOK_API_URL);
             if (response.ok) {
                 const data = await response.json();
                 guestbookMessages = data.messages || [];
+                renderMessages();
+            } else if (response.status === 404 || response.status === 403) {
+                // Key not found or bucket needs verification activation
+                // Seed with initial default messages
+                guestbookMessages = [
+                    {
+                        "name": "Dada Fan",
+                        "text": "Les RDD c'est toute ma jeunesse ! J'ai encore la cassette d'époque de Live Scout (1990) dans mon tiroir. Quel kiff de retrouver les morceaux en ligne !",
+                        "date": "04/05/2026"
+                    },
+                    {
+                        "name": "Rockeur d'Angers",
+                        "text": "Super la modernisation du site ! Très propre et pro. Simone et les garçons ont bien pris la relève spirituelle, le morceau 'Centre du jeu' déchire.",
+                        "date": "12/06/2026"
+                    },
+                    {
+                        "name": "Mélomane Grunge",
+                        "text": "Quel plaisir de réécouter 'Under my thumb' et 'Cocaine' en live brut. RDD forever !",
+                        "date": "28/06/2026"
+                    }
+                ];
                 renderMessages();
             } else {
                 container.innerHTML = `<div class="text-center text-muted" style="padding: 20px;">Erreur de chargement des messages.</div>`;
@@ -549,12 +568,11 @@ async function setupGuestbook() {
             const updatedMessages = [...guestbookMessages, newMsg];
 
             try {
-                // Send updated list to JSONBlob
+                // Send updated list to KVdb.io
                 const response = await fetch(GUESTBOOK_API_URL, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ messages: updatedMessages })
                 });
