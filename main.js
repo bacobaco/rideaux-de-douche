@@ -464,7 +464,7 @@ function setupDamienSound() {
    5. Livre d'Or (Guestbook) Logic using KVdb.io API
    ========================================================================== */
 
-const GUESTBOOK_BUCKET_ID = "RMLtntJwvdJ1CVMzXvP7oY";
+const GUESTBOOK_BUCKET_ID = "RkGdagiLED5EutGhCxP4Wa";
 const GUESTBOOK_API_URL = `https://kvdb.io/${GUESTBOOK_BUCKET_ID}/guestbook`;
 let guestbookMessages = [];
 
