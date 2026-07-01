@@ -569,28 +569,32 @@ async function setupGuestbook() {
 
             try {
                 // Send new message to Google Apps Script Web App
-                // Using text/plain Content-Type to prevent CORS preflight OPTIONS requests
-                const response = await fetch(GUESTBOOK_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: JSON.stringify(newMsg)
+                // Using x-www-form-urlencoded and no-cors mode to bypass browser CORS preflight & redirect restrictions
+                const formData = new URLSearchParams({
+                    name: name,
+                    text: text,
+                    date: dateStr
                 });
 
-                if (response.ok) {
-                    guestbookMessages.push(newMsg);
-                    renderMessages();
-                    
-                    // Reset form & show success feedback
-                    nameInput.value = "";
-                    messageInput.value = "";
-                    feedback.style.color = "#00ffcc";
-                    feedback.textContent = "Message publié avec succès ! Merci de votre soutien.";
-                    feedback.style.display = "block";
-                } else {
-                    throw new Error("Google Script returned error status");
-                }
+                await fetch(GUESTBOOK_API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData.toString()
+                });
+
+                // Under 'no-cors' mode, we won't receive the response body, but the fetch resolves successfully on network receipt.
+                guestbookMessages.push(newMsg);
+                renderMessages();
+                
+                // Reset form & show success feedback
+                nameInput.value = "";
+                messageInput.value = "";
+                feedback.style.color = "#00ffcc";
+                feedback.textContent = "Message publié avec succès ! Merci de votre soutien.";
+                feedback.style.display = "block";
             } catch (err) {
                 console.error("Failed to post message:", err);
                 feedback.style.color = "var(--secondary)";
