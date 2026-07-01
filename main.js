@@ -464,8 +464,7 @@ function setupDamienSound() {
    5. Livre d'Or (Guestbook) Logic using ExtendsClass API
    ========================================================================== */
 
-const GUESTBOOK_BIN_ID = "bfdfdeb";
-const GUESTBOOK_SEC_KEY = "rdd_guestbook_sec_key_2026";
+const GUESTBOOK_BIN_ID = "cacafac";
 let guestbookMessages = [];
 
 async function setupGuestbook() {
@@ -551,8 +550,7 @@ async function setupGuestbook() {
                 const response = await fetch(`https://extendsclass.com/api/json-storage/bin/${GUESTBOOK_BIN_ID}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Security-key': GUESTBOOK_SEC_KEY
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ messages: updatedMessages })
                 });
