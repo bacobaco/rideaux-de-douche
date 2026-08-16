@@ -13,7 +13,7 @@ Le site est disponible directement en ligne à l'adresse suivante :
 
 Ce site web présente l'histoire, les titres musicaux et les archives du groupe RDD :
 - 📻 **Lecteur audio intégré** pour écouter les morceaux et enregistrements du groupe.
-- 📜 **Histoire & Membres** : l'aventure musicale d'Angers (Damien Samain, Florent Cadoret, Stéphane Lecompte, Pascal Melot).
+- 📜 **Histoire & Membres** : l'aventure musicale d'Angers et la composition du groupe (Flo, Stéph, Mel's, Dada / Damien Samain, Erwann "MAC" à la basse, et Olivier).
 - 🎸 **Session 91** et galerie d'affiches de concerts.
 - 📖 **Livre d'or interactif** connecté à une API backend.
 - 📊 **Compteur de visites** en temps réel.
