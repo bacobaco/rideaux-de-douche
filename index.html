@@ -18,7 +18,7 @@
     <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="stylesheet" href="style.css?v=20261030-3">
+    <link rel="stylesheet" href="style.css?v=20261030-4">
 </head>
 <body>
 
@@ -197,9 +197,14 @@
                                 <i class="fa-solid fa-volume-high" id="volume-icon"></i>
                                 <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.8" aria-label="Volume">
                             </div>
-                            <a href="audio/live_scout/Under%20my%20thumb.mp3" class="btn btn-sm btn-outline" id="download-current-track-btn" download="Under my thumb.mp3" title="Télécharger le morceau en cours (MP3)">
-                                <i class="fa-solid fa-download"></i> Télécharger le MP3
-                            </a>
+                            <div class="player-download-actions">
+                                <a href="audio/live_scout/Under%20my%20thumb.mp3" class="btn btn-sm btn-outline" id="download-current-track-btn" download="Under my thumb.mp3" title="Télécharger le morceau en cours (MP3)">
+                                    <i class="fa-solid fa-download"></i> Télécharger ce MP3
+                                </a>
+                                <a href="audio/complete.zip" class="btn btn-sm btn-primary" id="download-complete-zip-btn" download="RDD_Oeuvre_Complete.zip" title="Télécharger toute l'œuvre des RDD (Archive ZIP - 33 titres)">
+                                    <i class="fa-solid fa-file-zipper"></i> L'Œuvre Complète (ZIP)
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -451,6 +456,6 @@
     <audio id="audio-element" style="display:none;"></audio>
 
     <!-- JavaScript Controller -->
-    <script src="main.js?v=20261030-3"></script>
+    <script src="main.js?v=20261030-4"></script>
 </body>
 </html>
