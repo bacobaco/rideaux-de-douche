@@ -41,6 +41,10 @@ const PLAYLISTS = {
         { title: "Green Blues", file: "audio/sons/green.mp3" },
         { title: "Root Blues", file: "audio/sons/root.mp3" },
         { title: "Centre du Jeu", file: "audio/sons/centre_du_jeu.mp3" }
+    ],
+    ia: [
+        { title: "Rido! (Cover IA Suno)", file: "audio/IA/Rido!.mp3" },
+        { title: "Viva (Cover IA Suno)", file: "audio/IA/Viva.mp3" }
     ]
 };
 
@@ -61,6 +65,10 @@ const ALBUM_METADATA = {
     simone: {
         title: "Simone & les Garçons",
         art: "images/simone_cover.png"
+    },
+    ia: {
+        title: "Covers IA (Suno)",
+        art: "images/affiche_ia_rdd_colors.jpg"
     }
 };
 
@@ -251,6 +259,9 @@ function renderTracklist() {
     if (descContainer && descText) {
         if (currentPlaylistKey === "simone") {
             descText.innerHTML = `<i class="fa-solid fa-info-circle" style="color: var(--primary-light); margin-right: 6px;"></i> <strong>Simone & les Garçons</strong> : Le groupe coup de cœur du nouveau millénaire, considérés comme les "enfants spirituels des RDD". Retrouvez ici leur triple single blues d'origine et la maquette inédite "Centre du Jeu".`;
+            descContainer.style.display = "block";
+        } else if (currentPlaylistKey === "ia") {
+            descText.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary-light); margin-right: 6px;"></i> <strong>Covers IA (Suno)</strong> : Deux réinterprétations modernes et explosives des titres cultes des RDD ("Rido!" et "Viva"), générées par intelligence artificielle avec Suno.`;
             descContainer.style.display = "block";
         } else {
             descContainer.style.display = "none";
