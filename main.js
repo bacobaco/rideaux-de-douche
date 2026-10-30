@@ -121,12 +121,16 @@ function initPlayer() {
 
 // Load a specific track
 function loadTrack(playlistKey, index, startPlaying = true) {
+    if (!PLAYLISTS[playlistKey] || !PLAYLISTS[playlistKey][index]) {
+        console.warn(`Playlist or track not found: ${playlistKey}[${index}]`);
+        return;
+    }
     currentPlaylistKey = playlistKey;
     currentTrackIndex = index;
     const track = PLAYLISTS[playlistKey][index];
-    const albumMeta = ALBUM_METADATA[playlistKey];
+    const albumMeta = ALBUM_METADATA[playlistKey] || { title: "Les Rideaux de Douche", art: "images/JimHen.gif" };
 
-    audio.src = track.file;
+    audio.src = encodeURI(track.file);
     currentTrackTitle.textContent = track.title;
     currentAlbumTitle.textContent = albumMeta.title;
     
@@ -335,13 +339,15 @@ audio.addEventListener("loadedmetadata", () => {
 
 // Playlist Tabs switcher
 tabButtons.forEach(button => {
-    button.addEventListener("click", (e) => {
+    button.addEventListener("click", () => {
         tabButtons.forEach(btn => btn.classList.remove("active"));
-        e.target.classList.add("active");
+        button.classList.add("active");
         
-        const playlistKey = e.target.getAttribute("data-playlist");
-        loadTrack(playlistKey, 0, isPlaying);
-        renderTracklist();
+        const playlistKey = button.getAttribute("data-playlist");
+        if (playlistKey && PLAYLISTS[playlistKey]) {
+            loadTrack(playlistKey, 0, isPlaying);
+            renderTracklist();
+        }
     });
 });
 
