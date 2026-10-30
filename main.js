@@ -133,6 +133,15 @@ function loadTrack(playlistKey, index, startPlaying = true) {
     audio.src = encodeURI(track.file);
     currentTrackTitle.textContent = track.title;
     currentAlbumTitle.textContent = albumMeta.title;
+
+    // Update player download button for currently active track
+    const downloadCurrentBtn = document.getElementById("download-current-track-btn");
+    if (downloadCurrentBtn) {
+        downloadCurrentBtn.href = encodeURI(track.file);
+        const fileName = track.file.split("/").pop();
+        downloadCurrentBtn.setAttribute("download", fileName);
+        downloadCurrentBtn.setAttribute("title", `Télécharger "${track.title}" (MP3)`);
+    }
     
     // Attempt loading custom cover, fallback to Jimi Hendrix logo if load fails
     playerAlbumArt.src = albumMeta.art;
@@ -281,15 +290,31 @@ function renderTracklist() {
             tr.className = "active-track";
         }
 
+        const encodedFile = encodeURI(track.file);
+        const fileName = track.file.split("/").pop();
+
         tr.innerHTML = `
             <td class="track-number">${index + 1}</td>
-            <td>${track.title}</td>
+            <td class="track-title-cell">${track.title}</td>
             <td style="text-align: right;">
-                <button class="play-track-icon" aria-label="Écouter ${track.title}">
-                    <i class="fa-solid ${isPlaying && index === currentTrackIndex ? 'fa-circle-pause' : 'fa-circle-play'}"></i>
-                </button>
+                <div class="track-actions">
+                    <a href="${encodedFile}" download="${fileName}" class="download-track-btn" title="Télécharger \"${track.title}\" (MP3)" aria-label="Télécharger ${track.title}">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                    <button class="play-track-icon" aria-label="Écouter ${track.title}">
+                        <i class="fa-solid ${isPlaying && index === currentTrackIndex ? 'fa-circle-pause' : 'fa-circle-play'}"></i>
+                    </button>
+                </div>
             </td>
         `;
+
+        // Prevent row play toggle when clicking direct download button
+        const dlBtn = tr.querySelector(".download-track-btn");
+        if (dlBtn) {
+            dlBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+            });
+        }
 
         // Row selection trigger
         tr.addEventListener("click", () => {

@@ -18,7 +18,7 @@
     <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="stylesheet" href="style.css?v=20261030-2">
+    <link rel="stylesheet" href="style.css?v=20261030-3">
 </head>
 <body>
 
@@ -197,8 +197,8 @@
                                 <i class="fa-solid fa-volume-high" id="volume-icon"></i>
                                 <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.8" aria-label="Volume">
                             </div>
-                            <a href="audio/complete.zip" class="btn btn-sm btn-outline" id="download-zip-btn" download>
-                                <i class="fa-solid fa-file-zipper"></i> Télécharger le ZIP
+                            <a href="audio/live_scout/Under%20my%20thumb.mp3" class="btn btn-sm btn-outline" id="download-current-track-btn" download="Under my thumb.mp3" title="Télécharger le morceau en cours (MP3)">
+                                <i class="fa-solid fa-download"></i> Télécharger le MP3
                             </a>
                         </div>
                     </div>
@@ -222,9 +222,9 @@
                         <table class="tracklist-table" id="tracks-table">
                             <thead>
                                 <tr>
-                                    <th style="width: 5%;">#</th>
-                                    <th style="width: 75%;">Titre</th>
-                                    <th style="width: 20%; text-align: right;">Écouter</th>
+                                    <th style="width: 8%;">#</th>
+                                    <th style="width: 67%;">Titre</th>
+                                    <th style="width: 25%; text-align: right;">Écouter / Télécharger</th>
                                 </tr>
                             </thead>
                             <tbody id="tracklist-body">
@@ -451,6 +451,6 @@
     <audio id="audio-element" style="display:none;"></audio>
 
     <!-- JavaScript Controller -->
-    <script src="main.js?v=20261030-2"></script>
+    <script src="main.js?v=20261030-3"></script>
 </body>
 </html>
